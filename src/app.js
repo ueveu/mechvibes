@@ -541,6 +541,14 @@ function packsToOptions(packs, pack_list) {
       minimize_to_tray_toggle.checked = !minimize_to_tray_toggle.checked;
       store.set(MV_MINIMIZE_TRAY_LSID, minimize_to_tray_toggle.checked);
     }
+
+    // Listen for minimize event
+    window.addEventListener('minimize', function(event) {
+      if (store.get(MV_MINIMIZE_TRAY_LSID)) {
+        event.preventDefault();
+        ipcRenderer.send('minimize-to-tray');
+      }
+    });
   });
 })(window, document);
 

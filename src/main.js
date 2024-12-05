@@ -602,6 +602,12 @@ if (!gotTheLock) {
       }
     })
 
+    ipcMain.on('minimize-to-tray', (event) => {
+      if (win) {
+        win.hide();
+      }
+    })
+
     ipcMain.on("electron-log", (event, message, level) => {
       const window_options = event.sender.browserWindowOptions;
       if(window_options.name !== undefined && typeof window_options.name == "string"){
