@@ -16,6 +16,7 @@ const { GetFileFromArchive } = require('./libs/soundpacks/file-manager');
 const MV_PACK_LSID = remote.getGlobal("current_pack_store_id");
 const MV_VOL_LSID = 'mechvibes-volume';
 const MV_TRAY_LSID = 'mechvibes-hidden';
+const MV_MINIMIZE_TRAY_LSID = 'mechvibes-minimize-tray';
 
 const CUSTOM_PACKS_DIR = remote.getGlobal('custom_dir');
 const OFFICIAL_PACKS_DIR = path.join(__dirname, 'audio');
@@ -319,6 +320,8 @@ function packsToOptions(packs, pack_list) {
     const volume = document.getElementById('volume');
     const tray_icon_toggle = document.getElementById("tray_icon_toggle");
     const tray_icon_toggle_group = document.getElementById("tray_icon_toggle_group");
+    const minimize_to_tray_toggle = document.getElementById("minimize_to_tray_toggle");
+    const minimize_to_tray_toggle_group = document.getElementById("minimize_to_tray_toggle_group");
 
     // init
     app_logo.innerHTML = 'Loading...';
@@ -525,6 +528,19 @@ function packsToOptions(packs, pack_list) {
       e.preventDefault();
       ipcRenderer.send("set-debug-options", { enabled: false });
     });
+
+    // Initialize the checkbox state
+    if (store.get(MV_MINIMIZE_TRAY_LSID) !== undefined) {
+      minimize_to_tray_toggle.checked = store.get(MV_MINIMIZE_TRAY_LSID);
+    }
+
+    minimize_to_tray_toggle_group.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      // Toggle checkbox
+      minimize_to_tray_toggle.checked = !minimize_to_tray_toggle.checked;
+      store.set(MV_MINIMIZE_TRAY_LSID, minimize_to_tray_toggle.checked);
+    }
   });
 })(window, document);
 
@@ -565,3 +581,5 @@ function playSound(sound_id, volume) {
     sound.play();
   }
 }
+
+

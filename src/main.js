@@ -212,15 +212,19 @@ function createWindow(show = false) {
 
   win.on('close', function (event) {
     if (!app.isQuiting) {
-      if (process.platform === 'darwin') {
-        app.dock.hide();
+      if (store.get(MV_MINIMIZE_TRAY_LSID)) {
+        event.preventDefault();
+        win.hide();
+      } else {
+        if (process.platform === 'darwin') {
+          app.dock.hide();
+        }
+        event.preventDefault();
+        win.hide();
       }
-      event.preventDefault();
-      win.hide();
     }
     return false;
   });
-
   win.on("unresponsive", () => {
     log.warn("Window has entered unresponsive state");
     console.log("unresponsive");
